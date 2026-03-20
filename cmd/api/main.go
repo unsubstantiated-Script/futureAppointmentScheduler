@@ -21,11 +21,28 @@ func main() {
 		log.Fatal("DATABASE_URL is not set")
 	}
 
-	dbConn, err := db.Open(dbURL)
+	var dbConn *sql.DB
+	var err error
+
+	for i := 0; i < 10; i++ {
+		dbConn, err = db.Open(dbURL)
+		if err == nil {
+			err = dbConn.Ping()
+		}
+		if err == nil {
+			break
+		}
+
+		log.Printf("waiting for db... attempt %d: %v", i+1, err)
+		time.Sleep(2 * time.Second)
+	}
+
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("failed to connect to db: %v", err)
 	}
 	defer dbConn.Close()
+
+	log.Println("connected to db")
 
 	if err := dbConn.Ping(); err != nil {
 		log.Fatal(err)
@@ -34,6 +51,7 @@ func main() {
 	if err := db.RunMigrations(dbConn); err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("ran migrations")
 
 	//Building routes
 	mux := http.NewServeMux()
