@@ -1,6 +1,15 @@
 Next Release
 -
 
+v0.2.0
+-
+* ADD: DB wired up
+* ADD: PostGres Driver installed
+* ADD: DB migration file
+* ADD: DB migration
+* ADD: DB seeding
+* FIX: DOCKERFILE for copying go.sum and running the correct go run command
+
 v0.1.0
 -
 * ADD: Initial release
