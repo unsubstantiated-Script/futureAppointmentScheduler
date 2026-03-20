@@ -1,11 +1,14 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"futureAppointmentScheduler/internal/appointments"
 	"futureAppointmentScheduler/internal/db"
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 func main() {
@@ -47,11 +50,17 @@ func main() {
 	if err := dbConn.Ping(); err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("connected to db")
 
 	if err := db.RunMigrations(dbConn); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("ran migrations")
+
+	if err := db.SeedAppointments(dbConn); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("seeded appointments")
 
 	//Building routes
 	mux := http.NewServeMux()
