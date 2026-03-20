@@ -1,6 +1,7 @@
 package main
 
 import (
+	"futureAppointmentScheduler/internal/appointments"
 	"futureAppointmentScheduler/internal/db"
 	"log"
 	"net/http"
@@ -8,23 +9,13 @@ import (
 )
 
 func main() {
+	//Setting up the API
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("ok"))
-	})
-
-	addr := ":" + port
-	log.Printf("api listening on %s", addr)
-	if err := http.ListenAndServe(addr, mux); err != nil {
-		log.Fatalf("server failed: %v", err)
-	}
-
+	//Setting up the DB
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
 		log.Fatal("DATABASE_URL is not set")
@@ -39,4 +30,17 @@ func main() {
 	if err := dbConn.Ping(); err != nil {
 		log.Fatal(err)
 	}
+
+	//Building routes
+	mux := http.NewServeMux()
+	h := appointments.NewHandler()
+	mux.HandleFunc("/appointments", h.Appointments)
+	mux.HandleFunc("/availability", h.Availability)
+
+	addr := ":" + port
+	log.Printf("api listening on %s", addr)
+	if err := http.ListenAndServe(addr, mux); err != nil {
+		log.Fatalf("server failed: %v", err)
+	}
+
 }
