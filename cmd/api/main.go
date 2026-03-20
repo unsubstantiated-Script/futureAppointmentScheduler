@@ -31,6 +31,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if err := db.RunMigrations(dbConn); err != nil {
+		log.Fatal(err)
+	}
+
 	//Building routes
 	mux := http.NewServeMux()
 	h := appointments.NewHandler()
