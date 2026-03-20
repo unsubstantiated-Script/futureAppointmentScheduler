@@ -1,6 +1,7 @@
 package main
 
 import (
+	"futureAppointmentScheduler/internal/db"
 	"log"
 	"net/http"
 	"os"
@@ -22,5 +23,20 @@ func main() {
 	log.Printf("api listening on %s", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatalf("server failed: %v", err)
+	}
+
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		log.Fatal("DATABASE_URL is not set")
+	}
+
+	dbConn, err := db.Open(dbURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dbConn.Close()
+
+	if err := dbConn.Ping(); err != nil {
+		log.Fatal(err)
 	}
 }
