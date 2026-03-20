@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: appointments
+    ports:
+      - "5432:5432"
+
+  api:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/appointments?sslmode=disable
+      PORT: 8000
+    ports:
+      - "8080:8080"
