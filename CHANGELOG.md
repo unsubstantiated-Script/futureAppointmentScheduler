@@ -1,6 +1,8 @@
 Next Release
 -
 
+v0.2.0
+-
 * ADD: DB wired up
 * ADD: PostGres Driver installed
 * ADD: DB migration file
