@@ -62,11 +62,16 @@ func main() {
 	}
 	fmt.Println("seeded appointments")
 
+	//Instantiating repo, service, and handler
+
+	repo := appointments.NewRepository(dbConn)
+	svc := appointments.NewService(repo)
+	handler := appointments.NewHandler(svc)
+
 	//Building routes
 	mux := http.NewServeMux()
-	h := appointments.NewHandler()
-	mux.HandleFunc("/appointments", h.Appointments)
-	mux.HandleFunc("/availability", h.Availability)
+	mux.HandleFunc("/appointments", handler.Appointments)
+	mux.HandleFunc("/availability", handler.Availability)
 
 	addr := ":" + port
 	log.Printf("api listening on %s", addr)
