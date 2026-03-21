@@ -13,6 +13,7 @@ func NewRepository(db *sql.DB) *Repository {
 	return &Repository{db: db}
 }
 
+// GetByTrainer returns all the appointments for a given trainer
 func (r *Repository) GetByTrainer(trainerID int) ([]Appointment, error) {
 	//Querying the database
 	rows, err := r.db.Query(`
@@ -50,6 +51,7 @@ func (r *Repository) GetByTrainer(trainerID int) ([]Appointment, error) {
 	return appointments, nil
 }
 
+// CreateAppointment inserts a new appointment into the database
 func (r *Repository) CreateAppointment(appt Appointment) error {
 	_, err := r.db.Exec(`
 		INSERT INTO appointments (trainer_id, user_id, starts_at, ends_at)
@@ -62,6 +64,7 @@ func (r *Repository) CreateAppointment(appt Appointment) error {
 	return err
 }
 
+// GetBetween returns all the appointments for a given trainer between two dates
 func (r *Repository) GetBetween(trainerID int, startsAt, endsAt time.Time) ([]Appointment, error) {
 	//Querying the database
 	rows, err := r.db.Query(`
