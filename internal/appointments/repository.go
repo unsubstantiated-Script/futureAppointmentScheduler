@@ -51,17 +51,23 @@ func (r *Repository) GetByTrainer(trainerID int) ([]Appointment, error) {
 	return appointments, nil
 }
 
-// CreateAppointment inserts a new appointment into the database
-func (r *Repository) CreateAppointment(appt Appointment) error {
-	_, err := r.db.Exec(`
+// CreateAppointment inserts a new appointment into the database and returns its ID.
+func (r *Repository) CreateAppointment(appt Appointment) (int, error) {
+	var id int
+	err := r.db.QueryRow(`
 		INSERT INTO appointments (trainer_id, user_id, starts_at, ends_at)
-		VALUES ($1, $2, $3, $4)`,
+		VALUES ($1, $2, $3, $4)
+		RETURNING id`,
 		appt.TrainerID,
 		appt.UserID,
 		appt.StartsAt,
 		appt.EndsAt,
-	)
-	return err
+	).Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }
 
 // GetBetween returns all the appointments for a given trainer between two dates
