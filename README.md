@@ -36,6 +36,23 @@ make down-volumes
 make test
 ```
 
+## Database login (DB viewer)
+
+Use these values to connect from tools like DBeaver, TablePlus, DataGrip, or psql.
+
+- Host: `localhost`
+- Port: `5432`
+- Database: `appointments`
+- Username: `postgres`
+- Password: `postgres`
+- SSL mode: `disable`
+
+Connection URL:
+
+```text
+postgres://postgres:postgres@localhost:5432/appointments?sslmode=disable
+```
+
 ## Endpoints
 
 - `GET /appointments?trainer_id=<id>`
@@ -113,23 +130,29 @@ When Postgres rejects an overlapping insert, the repository maps that DB error t
 
 ```text
 futureAppointmentScheduler/
+|-- CHANGELOG.md
+|-- Dockerfile
+|-- Makefile
+|-- README.md
 |-- cmd/
 |   `-- api/
 |       `-- main.go
+|-- data/
+|   `-- appointments.json
+|-- docker-compose.yml
+|-- go.mod
+|-- go.sum
 |-- internal/
 |   |-- appointments/
 |   |   |-- handler.go
-|   |   |-- service.go
+|   |   |-- models.go
 |   |   |-- repository.go
-|   |   `-- models.go
+|   |   |-- service.go
+|   |   `-- simple_test.go
 |   `-- db/
 |       |-- postgres.go
 |       `-- seed.go
 |-- migrations/
 |   `-- 001_init.sql
-|-- data/
-|   `-- appointments.json
-|-- docker-compose.yml
-|-- Dockerfile
-`-- Makefile
+`-- server
 ```
