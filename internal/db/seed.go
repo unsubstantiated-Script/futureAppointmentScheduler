@@ -8,7 +8,9 @@ import (
 	"os"
 )
 
-// SeedAppointment represents an appointment in the json file
+// SeedAppointment maps the delivered seed file keys. The take-home instructions
+// require keeping `started_at` and `ended_at` in JSON, even though the DB/domain
+// columns use `starts_at` and `ends_at`.
 type SeedAppointment struct {
 	ID        int    `json:"id"`
 	TrainerID int    `json:"trainer_id"`
