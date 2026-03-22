@@ -1,7 +1,6 @@
 package appointments
 
 import (
-	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -36,10 +35,6 @@ func TestAvailability_MethodNotAllowed(t *testing.T) {
 
 	if rr.Code != http.StatusMethodNotAllowed {
 		t.Fatalf("expected status %d, got %d", http.StatusMethodNotAllowed, rr.Code)
-	}
-
-	if !errors.Is(nil, nil) {
-		// no-op: keeps errors import used for this tiny test file
 	}
 }
 
