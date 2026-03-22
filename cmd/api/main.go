@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// main initializes and starts the application, setting up the database, running migrations, and configuring HTTP routes and server.
 func main() {
 	//Setting up the API
 	port := os.Getenv("PORT")
@@ -27,6 +28,7 @@ func main() {
 	var dbConn *sql.DB
 	var err error
 
+	// Establishing Database Connection
 	for i := 0; i < 10; i++ {
 		dbConn, err = db.Open(dbURL)
 		if err == nil {
@@ -47,11 +49,6 @@ func main() {
 
 	log.Println("connected to db")
 
-	if err := dbConn.Ping(); err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("connected to db")
-
 	if err := db.RunMigrations(dbConn); err != nil {
 		log.Fatal(err)
 	}
@@ -63,7 +60,6 @@ func main() {
 	fmt.Println("seeded appointments")
 
 	//Instantiating repo, service, and handler
-
 	repo := appointments.NewRepository(dbConn)
 	svc := appointments.NewService(repo)
 	handler := appointments.NewHandler(svc)
