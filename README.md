@@ -36,6 +36,23 @@ make down-volumes
 make test
 ```
 
+## Database login (DB viewer)
+
+Use these values to connect from tools like DBeaver, TablePlus, DataGrip, or psql.
+
+- Host: `localhost`
+- Port: `5432`
+- Database: `appointments`
+- Username: `postgres`
+- Password: `postgres`
+- SSL mode: `disable`
+
+Connection URL:
+
+```text
+postgres://postgres:postgres@localhost:5432/appointments?sslmode=disable
+```
+
 ## Endpoints
 
 - `GET /appointments?trainer_id=<id>`
