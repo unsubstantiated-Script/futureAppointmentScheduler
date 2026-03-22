@@ -8,13 +8,15 @@ import (
 	"os"
 )
 
-// SeedAppointment represents an appointment in the json file
+// SeedAppointment maps the delivered seed file keys. The take-home instructions
+// require keeping `started_at` and `ended_at` in JSON, even though the DB/domain
+// columns use `starts_at` and `ends_at`.
 type SeedAppointment struct {
 	ID        int    `json:"id"`
 	TrainerID int    `json:"trainer_id"`
 	UserID    int    `json:"user_id"`
-	StartedAt string `json:"started_at"`
-	EndedAt   string `json:"ended_at"`
+	StartsAt  string `json:"started_at"`
+	EndsAt    string `json:"ended_at"`
 }
 
 // RunMigrations runs the migrations
@@ -58,12 +60,12 @@ func SeedAppointments(db *sql.DB) error {
 	ctx := context.Background()
 
 	for _, appointment := range appointments {
-		_, err := db.ExecContext(ctx, "INSERT INTO appointments (id, trainer_id, user_id, started_at, ended_at) VALUES ($1, $2, $3, $4, $5)",
+		_, err := db.ExecContext(ctx, "INSERT INTO appointments (id, trainer_id, user_id, starts_at, ends_at) VALUES ($1, $2, $3, $4, $5)",
 			appointment.ID,
 			appointment.TrainerID,
 			appointment.UserID,
-			appointment.StartedAt,
-			appointment.EndedAt)
+			appointment.StartsAt,
+			appointment.EndsAt)
 		if err != nil {
 			return fmt.Errorf("failed to insert appointment: %w", err)
 		}
