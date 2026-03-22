@@ -31,15 +31,6 @@ func (s *Service) CreateAppointment(appt Appointment) (int, error) {
 		return 0, err
 	}
 
-	existing, err := s.repo.GetBetween(appt.TrainerID, appt.StartsAt, appt.EndsAt)
-	if err != nil {
-		return 0, err
-	}
-
-	if len(existing) > 0 {
-		return 0, ErrAppointmentOverlap
-	}
-
 	return s.repo.CreateAppointment(appt)
 }
 

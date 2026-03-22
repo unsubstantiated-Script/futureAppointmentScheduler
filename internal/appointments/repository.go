@@ -2,7 +2,10 @@ package appointments
 
 import (
 	"database/sql"
+	"errors"
 	"time"
+
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type Repository struct {
@@ -63,7 +66,14 @@ func (r *Repository) CreateAppointment(appt Appointment) (int, error) {
 		appt.StartsAt,
 		appt.EndsAt,
 	).Scan(&id)
+
 	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) &&
+			pgErr.Code == "23P01" &&
+			pgErr.ConstraintName == "appointments_no_overlap" {
+			return 0, ErrAppointmentOverlap
+		}
 		return 0, err
 	}
 
