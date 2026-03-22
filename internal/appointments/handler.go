@@ -12,6 +12,7 @@ type Handler struct {
 	service *Service
 }
 
+// NewHandler creates and returns a new Handler instance with the given Service.
 func NewHandler(service *Service) *Handler {
 	return &Handler{service: service}
 }
@@ -67,12 +68,8 @@ func (h *Handler) createAppointment(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusCreated, appt)
 }
 
+// trainerAvailability determines and returns available slots for a trainer within a given time range from the request query.
 func (h *Handler) trainerAvailability(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	trainerIDstr := r.URL.Query().Get("trainer_id")
 	startsAtstr := r.URL.Query().Get("starts_at")
 	endsAtstr := r.URL.Query().Get("ends_at")
@@ -128,6 +125,11 @@ func (h *Handler) Appointments(w http.ResponseWriter, r *http.Request) {
 
 // Availability handles GET on /availability.
 func (h *Handler) Availability(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	h.trainerAvailability(w, r)
 }
 
